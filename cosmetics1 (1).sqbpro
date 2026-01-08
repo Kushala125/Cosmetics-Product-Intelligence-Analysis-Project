@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="cosmetics.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="967"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="cosmetics_clean" custom_title="0" dock_id="3" table="4,15:maincosmetics_clean"/><dock_state state="000000ff00000000fd0000000100000002000001d10000021dfc0100000002fb000000160064006f0063006b00420072006f00770073006500310100000000000001c30000000000000000fc00000000000001d10000011d00fffffffa000000010100000002fb000000160064006f0063006b00420072006f00770073006500320000000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500330100000000ffffffff0000011d00ffffff000001d10000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="cosmetics 2" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="68"/><column index="2" value="162"/><column index="3" value="300"/><column index="4" value="46"/><column index="5" value="46"/><column index="6" value="300"/><column index="7" value="72"/><column index="8" value="46"/><column index="9" value="47"/><column index="10" value="53"/><column index="11" value="56"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="cosmetics_clean" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths/><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1"></sql><sql name="SQL 2">
+--cosmetic project
+--Q0.1 — How many products are loaded?
+-----------------------------------
+SELECT COUNT(*) AS total_products
+FROM cosmetics_clean;
+
+--Q0.2 — Are there missing values in key columns?
+-----------------------------------------------
+SELECT
+    SUM(CASE WHEN price IS NULL THEN 1 ELSE 0 END) AS missing_price,
+    SUM(CASE WHEN rating IS NULL THEN 1 ELSE 0 END) AS missing_rating,
+    SUM(CASE WHEN brand IS NULL OR brand = '' THEN 1 ELSE 0 END) AS missing_brand
+FROM cosmetics_clean;
+
+--Q0.3 — Are skin-type columns numeric (0/1)?
+-------------------------------------------
+SELECT DISTINCT normal, dry, oily, sensitive
+FROM cosmetics_clean
+LIMIT 20;
+
+----------------------------------------------------
+--SECTION 1: FEATURE ENGINEERING
+----------------------------------------------------
+
+--Q1.1 — How many skin types does each product support?
+-----------------------------------------------------
+UPDATE cosmetics_clean
+SET skin_type_coverage =
+    normal + dry + oily + sensitive;
+
+--Q1.2 — Distribution of skin-type coverage
+------------------------------------------
+SELECT
+    skin_type_coverage,
+    COUNT(*) AS product_count
+FROM cosmetics_clean
+GROUP BY skin_type_coverage
+ORDER BY skin_type_coverage DESC;
+
+----------------------------------------------------
+--SECTION 2: CORE KPIs (EXECUTIVE LEVEL)
+----------------------------------------------------
+
+--Q2.1 — What is the average product price?
+-----------------------------------------
+SELECT ROUND(AVG(price), 2) AS average_price
+FROM cosmetics_clean;
+
+--Q2.2 — What is the average customer rating?
+-------------------------------------------
+SELECT ROUND(AVG(rating), 2) AS average_rating
+FROM cosmetics_clean;
+
+--Q2.3 — Total number of brands
+-----------------------------
+SELECT COUNT(DISTINCT brand) AS total_brands
+FROM cosmetics_clean;
+
+----------------------------------------------------
+--SECTION 3: BRAND &amp; CATEGORY OVERVIEW
+----------------------------------------------------
+
+--Q3.1 — Which brands have the most products?
+-------------------------------------------
+SELECT
+    brand,
+    COUNT(*) AS product_count
+FROM cosmetics_clean
+GROUP BY brand
+ORDER BY product_count DESC;
+
+--Q3.2 — Which categories dominate the market?
+---------------------------------------------
+SELECT
+    category,
+    COUNT(*) AS product_count
+FROM cosmetics_clean
+GROUP BY category
+ORDER BY product_count DESC;
+
+----------------------------------------------------
+--SECTION 4: PRICE ANALYSIS
+----------------------------------------------------
+
+--Q4.1 — Create price segments
+----------------------------
+ALTER TABLE cosmetics_clean ADD COLUMN price_segment TEXT;
+
+UPDATE cosmetics_clean
+SET price_segment =
+    CASE
+        WHEN price &lt; 25 THEN 'Budget'
+        WHEN price BETWEEN 25 AND 60 THEN 'Mid-Range'
+        ELSE 'Luxury'
+    END;
+
+--Q4.2 — Price segment distribution
+---------------------------------
+SELECT
+    price_segment,
+    COUNT(*) AS product_count
+FROM cosmetics_clean
+GROUP BY price_segment;
+
+----------------------------------------------------
+--SECTION 5: PRICE vs RATING (CLASSIC BUSINESS QUESTION)
+----------------------------------------------------
+
+--Q5.1 — Does higher price mean better rating?
+--------------------------------------------
+SELECT
+    price_segment,
+    ROUND(AVG(rating), 2) AS avg_rating,
+    COUNT(*) AS product_count
+FROM cosmetics_clean
+GROUP BY price_segment
+ORDER BY avg_rating DESC;
+
+----------------------------------------------------
+--SECTION 6: ADVANCED — PRICE × SKIN TYPE × RATING
+----------------------------------------------------
+
+--Q6.1 — How does skin coverage change the price–rating relationship?
+-------------------------------------------------------------------
+SELECT
+    price_segment,
+    skin_type_coverage,
+    ROUND(AVG(rating), 2) AS avg_rating,
+    COUNT(*) AS product_count
+FROM cosmetics_clean
+GROUP BY price_segment, skin_type_coverage
+ORDER BY price_segment, skin_type_coverage DESC;
+
+----------------------------------------------------
+--SECTION 7: VALUE &amp; STRATEGY ANALYSIS (VERY ADVANCED)
+----------------------------------------------------
+
+--Q7.1 — Best value-for-money products
+------------------------------------
+SELECT
+    brand,
+    product_name,
+    price,
+    rating,
+    ROUND(rating / price, 4) AS price_efficiency
+FROM cosmetics_clean
+WHERE price &gt; 0
+ORDER BY price_efficiency DESC
+LIMIT 15;
+
+--Q7.2 — Inclusivity premium analysis
+-----------------------------------
+SELECT
+    skin_type_coverage,
+    ROUND(AVG(price), 2) AS avg_price,
+    ROUND(AVG(rating), 2) AS avg_rating,
+    COUNT(*) AS product_count
+FROM cosmetics_clean
+GROUP BY skin_type_coverage
+ORDER BY skin_type_coverage DESC;
+
+----------------------------------------------------
+--SECTION 8: PRODUCT &amp; BRAND RISK ANALYSIS (UNIQUE)
+----------------------------------------------------
+
+--Q8.1 — Brand consistency (rating stability)
+--------------------------------------------
+SELECT
+    brand,
+    ROUND(AVG(rating), 2) AS avg_rating,
+    ROUND(MAX(rating) - MIN(rating), 2) AS rating_spread,
+    COUNT(*) AS product_count
+FROM cosmetics_clean
+GROUP BY brand
+HAVING product_count &gt;= 10
+ORDER BY rating_spread ASC;
+
+--Q8.2 — One-hit-wonder brands
+----------------------------
+SELECT
+    brand,
+    COUNT(*) AS total_products,
+    MAX(rating) AS best_rating,
+    ROUND(AVG(rating), 2) AS avg_rating
+FROM cosmetics_clean
+GROUP BY brand
+HAVING total_products &gt;= 10
+ORDER BY best_rating DESC;
+
+----------------------------------------------------
+--SECTION 9: CONSUMER RECOMMENDATION LOGIC
+----------------------------------------------------
+
+--Q9.1 — Safe-buy products (high rating + fair price + inclusive)
+---------------------------------------------------------------
+SELECT
+    brand,
+    product_name,
+    price,
+    rating,
+    skin_type_coverage
+FROM cosmetics_clean
+WHERE rating &gt;= 4.3
+  AND price BETWEEN 20 AND 40
+  AND skin_type_coverage &gt;= 3
+ORDER BY rating DESC;
+
+--1. Which products rank highest within each brand based on rating?
+---------------------------------------------------------------
+SELECT
+    brand,
+    product_name,
+    rating,
+    RANK() OVER (
+        PARTITION BY brand
+        ORDER BY rating DESC
+    ) AS brand_rating_rank
+FROM cosmetics_clean;
+ --What are the top 3 highest-rated products for each brand?
+-----------------------------------------------------------
+WITH ranked_products AS (
+    SELECT
+        brand,
+        product_name,
+        rating,
+        ROW_NUMBER() OVER (
+            PARTITION BY brand
+            ORDER BY rating DESC
+        ) AS rn
+    FROM cosmetics_clean
+)
+SELECT *
+FROM ranked_products
+WHERE rn &lt;= 3;
+-- What percentage of the total catalog does each brand contribute?
+-------------------------------------------------------------------
+SELECT
+    brand,
+    COUNT(*) AS product_count,
+    ROUND(
+        COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (),
+        2
+    ) AS market_share_percent
+FROM cosmetics_clean
+GROUP BY brand
+ORDER BY market_share_percent DESC;
+
+----------------------------------------------------
+
+--How does each product’s rating compare to its brand’s average?
+-----------------------------------------------------------------
+SELECT
+    brand,
+    product_name,
+    rating,
+    ROUND(
+        AVG(rating) OVER (PARTITION BY brand),
+        2
+    ) AS brand_avg_rating,
+    ROUND(
+        rating - AVG(rating) OVER (PARTITION BY brand),
+        2
+    ) AS diff_from_brand_avg
+FROM cosmetics_clean;
+--5. Which products outperform or underperform their brand average?
+-----------------------------------------------------------------
+WITH brand_comparison AS (
+    SELECT
+        brand,
+        product_name,
+        rating,
+        AVG(rating) OVER (PARTITION BY brand) AS brand_avg
+    FROM cosmetics_clean
+)
+SELECT
+    brand,
+    product_name,
+    rating,
+    ROUND(rating - brand_avg, 2) AS performance_gap
+FROM brand_comparison
+ORDER BY performance_gap DESC;
+--6. How does each product’s price compare to the brand’s average price?
+----------------------------------------------------------------------
+SELECT
+    brand,
+    product_name,
+    price,
+    ROUND(
+        AVG(price) OVER (PARTITION BY brand),
+        2
+    ) AS brand_avg_price,
+    ROUND(
+        price - AVG(price) OVER (PARTITION BY brand),
+        2
+    ) AS diff_from_brand_price
+FROM cosmetics_clean;
+
+</sql><current_tab id="1"/></tab_sql></sqlb_project>
