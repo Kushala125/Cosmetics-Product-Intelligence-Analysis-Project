@@ -1,10 +1,9 @@
 Cosmetics Product Intelligence & Market Strategy
 An end-to-end data and analytics project evaluating 1,400+ cosmetic products. This project transitions from raw data validation in SQL to advanced exploratory data analysis (EDA) in Python, concluding with executive-level strategy visualizations.
 
-🚀 Project Overview
+ Project Overview
 This repository focuses on identifying "Value Creators" in the beauty industry. By analyzing the relationship between price, chemical ingredients, and user ratings, the project identifies which brands provide the best ROI for consumers and which carry the highest "Expectation Gap."
-
-🛠️ Technical Stack
+ Technical Stack
 Database: SQLite (Data validation & Performance Gap Analysis)
 
 Language: Python 3.x
@@ -33,30 +32,25 @@ Correlation Mapping: Understanding the link between price points and consumer sa
 Ingredient Analysis: Examining product compositions across different labels (Moisturizers, Cleansers, etc.).
 2B DATA VISUALIZATION
 1 Which brands create real value after adjusting for risk?
-<p align="center">
-  <img src="images/brand_impact.png" width="45%" />
-  <img src="images/safe_buy_zone.png" width="45%" />
-</p>
-<p align="center">
-  <em>Left: Brand Value Impact (Risk Adjusted) | Right: Safe Buy Zone Recommendation Engine</em>
-</p>
+![Chart](notebooks/images/image 1.png)
 2 Which brands are high-value but also high-risk, and which are stable performers?
-
+![Chart](notebooks/images/image 2.png)
 3  Which products should be promoted, maintained, or discontinued?
-
+![Chart](notebooks/images/image 3.png)
 4  What type of personality does each brand have based on price and customer satisfaction?
-
+![Chart](notebooks/images/image 4.png)
 5 Which products exceed customer expectations and which ones disappoint?
-
+![Chart](notebooks/images/image 5.png)
 6  Which products are safest to recommend to customers?
-
+![Chart](notebooks/images/image 6.png)
 7 Which products deliver the highest value relative to their price?
-
+![Chart](notebooks/images/image 7.png)
 8 Which low-priced products provide unexpectedly high value?
-
+![Chart](notebooks/images/image 8.png)
 9 At what price range does increasing price stop improving customer satisfaction?
+![Chart](notebooks/images/image 9.png)
 10  How does customer satisfaction compare across cheap, mid-range, and expensive products?
-
+![Chart](notebooks/images/image 9.png)
 
 3. Strategic Business Insights
 The project concludes with high-level visualizations designed for stakeholders:
