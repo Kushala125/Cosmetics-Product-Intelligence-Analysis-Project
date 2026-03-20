@@ -52,8 +52,7 @@ Ingredient Analysis: Examining product compositions across different labels (Moi
 ![Chart](images/chart9.png)
 10  How does customer satisfaction compare across cheap, mid-range, and expensive products?
 ![Chart](images/chart9.png)
-
-3. Strategic Business Insights
+STRAGETICS  BUSINESS INSIGHTS 
 The project concludes with high-level visualizations designed for stakeholders:
 
 Brand Value Impact: A risk-adjusted view of brand equity (Value vs. Risk).
@@ -64,7 +63,7 @@ The "Safe Buy Zone": A visual recommendation engine for high-probability consume
 
 Price Sweet Spot: Identifying the exact price range where rating quality peaks before diminishing returns set in.
 
-📁 File Structure
+FILE STRUCTURE
 cosmetics.csv: The raw dataset containing product ingredients and skin-type flags.
 
 SQL.pdf: Comprehensive documentation of all SQL queries and data validation steps.
