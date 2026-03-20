@@ -32,24 +32,36 @@ Correlation Mapping: Understanding the link between price points and consumer sa
 Ingredient Analysis: Examining product compositions across different labels (Moisturizers, Cleansers, etc.).
 2B DATA VISUALIZATION
 1 Which brands create real value after adjusting for risk?
-![Chart](images/chart1.png)
+![Chart](images/chart1.png) 
+This chart shows how each brand’s value contributes positively or negatively once risk is accounted for. It clearly separates brands that genuinely add value from those whose risk erodes perceived value. This format is commonly used in executive finance and strategy reviews, not student analytics.
 2 Which brands are high-value but also high-risk, and which are stable performers?
 ![Chart](images/chart2.png)
+This chart shows how each brand’s value contributes positively or negatively once risk is accounted for. It clearly separates brands that genuinely add value from those whose risk erodes perceived value. This format is commonly used in executive finance and strategy reviews, not student analytics.
 3  Which products should be promoted, maintained, or discontinued?
 ![Chart](images/chart3.png)
+This chart visually shows which products should be promoted, maintained, or removed from the portfolio.
 4  What type of personality does each brand have based on price and customer satisfaction?
 ![Chart](images/chart4.png)
+This quadrant assigns each brand a clear personality based on how expensive and how loved it is.
+
 5 Which products exceed customer expectations and which ones disappoint?
 ![Chart](images/chart5.png)
+This calculates how much better or worse a product performed compared to what customers expect at its price level.
+This chart shows which products pleasantly surprise customers (above zero) and which disappoint them (below zero).
+
 6  Which products are safest to recommend to customers?
 ![Chart](images/chart6.png)
-
+This graph visually highlights products that are safest to recommend to customers.
 7 Which products deliver the highest value relative to their price?
 ![Chart](images/chart7.png)
+This gradient chart reveals hidden high-value products using color intensity.
+
 8 Which low-priced products provide unexpectedly high value?
 ![Chart](images/chart8.png)
+This graph shows where increasing price stops improving customer satisfaction.
 9 At what price range does increasing price stop improving customer satisfaction?
 ![Chart](images/chart9.png)
+This graph compares customer happiness across cheap, mid, and expensive products.
 10  How does customer satisfaction compare across cheap, mid-range, and expensive products?
 ![Chart](images/chart9.png)
 STRAGETICS  BUSINESS INSIGHTS 
