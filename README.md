@@ -1,9 +1,9 @@
-Cosmetics Product Intelligence & Market Strategy
+## Cosmetics Product Intelligence & Market Strategy
 An end-to-end data and analytics project evaluating 1,400+ cosmetic products. This project transitions from raw data validation in SQL to advanced exploratory data analysis (EDA) in Python, concluding with executive-level strategy visualizations.
 
-Project Overview
+## Project Overview
 This repository focuses on identifying "Value Creators" in the beauty industry. By analyzing the relationship between price, chemical ingredients, and user ratings, the project identifies which brands provide the best ROI for consumers and which carry the highest "Expectation Gap."
-Technical Stack
+## Technical Stack
 Database: SQLite (Data validation & Performance Gap Analysis)
 
 Language: Python 3.x
@@ -12,7 +12,7 @@ Libraries: Pandas, NumPy, Matplotlib, Seaborn
 
 Documentation: SQL Schema Analysis & Strategic Business Report (PDFs)
 
-Key Analytical Phases
+## Key Analytical Phases
 1. SQL Data Validation & Aggregation
 Using advanced SQL queries (including Window Functions), I performed:
 
@@ -22,7 +22,7 @@ Performance Gap Analysis: Calculated how individual products perform against the
 
 Brand Stratification: Categorized brands by price tiers and rating consistency.
 
-2A Python Exploratory Data Analysis (EDA)
+## 2A Python Exploratory Data Analysis (EDA)
 The analysis.ipynb notebook dives into the distribution of the data:
 
 Descriptive Statistics: Analyzing price volatility and rating skews.
@@ -121,7 +121,7 @@ Opportunity: There is a market gap for "Sensitive-Specific" luxury items, as man
 5. The "Safe Buy Zone" (Recommendation Engine)
 Your "Safe Buy Zone" visual identifies a cluster of products that represent the lowest risk for a first-time buyer.
 
-Strategic Application: This data can be used to build a "Smart Cart" recommendation algorithm. By filtering for products with a Value Score (Rating/Price) above 0.8, retailers can increase customer lifetime value (LTV) by ensuring the first purchase is a guaranteed success.
+## Strategic Application: This data can be used to build a "Smart Cart" recommendation algorithm. By filtering for products with a Value Score (Rating/Price) above 0.8, retailers can increase customer lifetime value (LTV) by ensuring the first purchase is a guaranteed success.
 Key Findings
 Value vs. Price: Higher price does not always correlate with higher ratings; the "Price Sweet Spot" analysis revealed significant value in mid-tier brands.
 
