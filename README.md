@@ -14,14 +14,226 @@ Documentation: SQL Schema Analysis & Strategic Business Report (PDFs)
 
 ## Key Analytical Phases
 1. SQL Data Validation & Aggregation
-Using advanced SQL queries (including Window Functions), I performed:
+1. Pricing Strategy Analysis
+📌 Insight (Detailed)
 
-Integrity Checks: Validated skin-type compatibility (binary 0/1) and handled missving values.
+The dataset reveals that the cosmetics market is heavily dominated by mid-range products, with a balanced presence of budget and luxury segments.
 
-Performance Gap Analysis: Calculated how individual products perform against their brand average using AVG() OVER (PARTITION BY brand).
+The mid-range segment has the highest product concentration, indicating strong competition.
+Luxury products exist but do not dominate the catalog.
+Budget products maintain a steady presence, suggesting accessibility is important.
 
-Brand Stratification: Categorized brands by price tiers and rating consistency.
+👉 Business Interpretation:
+Brands are strategically positioning themselves in the mid-price segment to maximize reach and competitiveness, rather than focusing solely on premium pricing.
 
+🧾 SQL Query
+SELECT
+price_segment,
+COUNT(*) AS product_count
+FROM cosmetics_clean
+GROUP BY price_segment;
+## ⭐ 2. Customer Satisfaction & Rating Behavior
+📌 Insight (Detailed)
+
+Customer ratings are consistently high across the dataset, with an average above 4.0.
+
+This suggests overall strong product satisfaction
+However, when comparing price segments:
+Mid-range products often match or outperform luxury products
+Budget products also maintain competitive ratings
+
+👉 Business Interpretation:
+There is no strong correlation between price and customer satisfaction. Customers prioritize effectiveness and value, not just brand prestige.
+
+🧾 SQL Queries
+
+Average rating:
+
+SELECT ROUND(AVG(rating), 2) AS average_rating
+FROM cosmetics_clean;
+
+Price vs rating:
+
+SELECT
+price_segment,
+ROUND(AVG(rating), 2) AS avg_rating,
+COUNT(*) AS product_count
+FROM cosmetics_clean
+GROUP BY price_segment
+ORDER BY avg_rating DESC;
+## 🏷️ 3. Brand Performance & Market Positioning
+📌 Insight (Detailed)
+
+The dataset shows that a few brands dominate in terms of product count, but:
+
+High product volume does not guarantee higher ratings
+Some smaller brands compete effectively with fewer products
+
+👉 Business Interpretation:
+Success in the cosmetics industry depends more on product quality and consistency than sheer catalog size.
+
+🧾 SQL Query
+SELECT
+brand,
+COUNT(*) AS product_count
+FROM cosmetics_clean
+GROUP BY brand
+ORDER BY product_count DESC;
+## 🧴 4. Product Inclusivity (Skin-Type Coverage)
+📌 Insight (Detailed)
+
+Products supporting multiple skin types (e.g., dry, oily, sensitive):
+
+Tend to have slightly higher prices
+Maintain strong ratings
+Represent a large portion of the dataset
+
+👉 Business Interpretation:
+Inclusivity is a key product differentiation strategy. Brands are investing in products that cater to broader audiences, increasing both value perception and market reach.
+
+🧾 SQL Queries
+
+Feature engineering:
+
+UPDATE cosmetics_clean
+SET skin_type_coverage = normal + dry + oily + sensitive;
+
+Distribution:
+
+SELECT
+skin_type_coverage,
+COUNT(*) AS product_count
+FROM cosmetics_clean
+GROUP BY skin_type_coverage
+ORDER BY skin_type_coverage DESC;
+## 💎 5. Value-for-Money Analysis
+📌 Insight (Detailed)
+
+By calculating a price-efficiency metric (rating/price):
+
+The best value products are mostly mid-range or affordable
+Luxury products rarely dominate in value rankings
+
+👉 Business Interpretation:
+Customers can achieve high satisfaction at lower cost, making the market highly competitive and reducing the advantage of premium pricing.
+
+🧾 SQL Query
+SELECT
+brand,
+product_name,
+price,
+rating,
+ROUND(rating / price, 4) AS price_efficiency
+FROM cosmetics_clean
+WHERE price > 0
+ORDER BY price_efficiency DESC
+LIMIT 15;
+## ⚠️ 6. Brand Consistency & Risk Analysis
+📌 Insight (Detailed)
+
+Brand consistency is measured using rating spread:
+
+Brands with low variation deliver consistent quality
+Brands with high variation indicate inconsistent performance
+
+👉 Business Interpretation:
+Customers are more likely to trust brands that provide consistent product experiences, not just occasional high-performing products.
+
+🧾 SQL Query
+SELECT
+brand,
+ROUND(AVG(rating), 2) AS avg_rating,
+ROUND(MAX(rating) - MIN(rating), 2) AS rating_spread,
+COUNT(*) AS product_count
+FROM cosmetics_clean
+GROUP BY brand
+HAVING product_count >= 10
+ORDER BY rating_spread ASC;
+## 🛍️ 7. Consumer Recommendation System
+📌 Insight (Detailed)
+
+A “safe-buy” strategy identifies products that balance:
+
+High rating (≥ 4.3)
+Affordable price (20–40)
+Broad usability (multi skin types)
+
+👉 Business Interpretation:
+Consumers prefer products that deliver high performance without premium pricing, especially when suitable for diverse skin types.
+
+🧾 SQL Query
+SELECT
+brand,
+product_name,
+price,
+rating,
+skin_type_coverage
+FROM cosmetics_clean
+WHERE rating >= 4.3
+AND price BETWEEN 20 AND 40
+AND skin_type_coverage >= 3
+ORDER BY rating DESC;
+## 📊 8. Market Share & Competition
+📌 Insight (Detailed)
+
+Market share analysis shows:
+
+A few brands contribute a large percentage of total products
+The rest of the market is fragmented
+
+👉 Business Interpretation:
+The industry reflects moderate market concentration, where dominant brands coexist with niche competitors.
+
+🧾 SQL Query
+SELECT
+brand,
+COUNT(*) AS product_count,
+ROUND(
+COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (),
+2
+) AS market_share_percent
+FROM cosmetics_clean
+GROUP BY brand
+ORDER BY market_share_percent DESC;
+## 🧠 9. Advanced Analytics (Window Functions)
+📌 Insight (Detailed)
+
+Advanced SQL reveals:
+
+Top-performing products within each brand
+Products that outperform or underperform brand averages
+
+👉 Business Interpretation:
+Individual products can significantly influence brand perception and customer trust.
+
+🧾 SQL Queries
+
+Top 3 per brand:
+
+WITH ranked_products AS (
+SELECT
+brand,
+product_name,
+rating,
+ROW_NUMBER() OVER (
+PARTITION BY brand
+ORDER BY rating DESC
+) AS rn
+FROM cosmetics_clean
+)
+SELECT *
+FROM ranked_products
+WHERE rn <= 3;
+
+Comparison with brand average:
+
+SELECT
+brand,
+product_name,
+rating,
+ROUND(AVG(rating) OVER (PARTITION BY brand), 2) AS brand_avg_rating,
+ROUND(rating - AVG(rating) OVER (PARTITION BY brand), 2) AS diff_from_avg
+FROM cosmetics_clean;
 ## 2A Python Exploratory Data Analysis (EDA)
 The analysis.ipynb notebook dives into the distribution of the data:
 
