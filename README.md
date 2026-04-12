@@ -13,7 +13,8 @@ Libraries: Pandas, NumPy, Matplotlib, Seaborn
 Documentation: SQL Schema Analysis & Strategic Business Report (PDFs)
 
 ## Key Analytical Phases
-1. SQL Data Validation & Aggregation
+## 1. SQL Data Validation & Aggregation
+
 1. Pricing Strategy Analysis
 📌 Insight (Detailed)
 
